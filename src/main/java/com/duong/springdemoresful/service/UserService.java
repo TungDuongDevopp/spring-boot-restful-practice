@@ -5,18 +5,16 @@ package com.duong.springdemoresful.service;
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
 	private final UserRepository userRepository;
-
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
 
 	public List<User> fetchUsers() {
 		return this.userRepository.findAll();

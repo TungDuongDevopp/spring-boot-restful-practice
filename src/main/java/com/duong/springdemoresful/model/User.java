@@ -7,8 +7,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter @Setter
 @Entity
 @Table(name = "users")
@@ -29,8 +31,6 @@ public class User {
 
 	@NotBlank(message = "address không được để trống")
 	private String address;
-
-	public User() {}
 
 	@Override
 	public String toString() {

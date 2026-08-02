@@ -4,7 +4,6 @@ package com.duong.springdemoresful.controller;
 import com.duong.springdemoresful.helper.ApiResponse;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,10 +19,12 @@ public class UserController {
 		this.userService = userService;
 	}
 
+
+
 	@PostMapping("/users")
 	public ResponseEntity<ApiResponse<User>>createUser(@RequestBody User user){
 		User createUser = userService.createUser(user);
-		return ApiResponse.created(user);
+		return ApiResponse.created(createUser);
 	}
 
 	@GetMapping("/users")
@@ -32,8 +33,11 @@ public class UserController {
 		return ApiResponse.success(users);
 	}
 
+
+
 	@GetMapping("/users/{id}")
 	public ResponseEntity<ApiResponse<User>>getUserById(@PathVariable int id){
+
 		User user = userService.findUserById(id);
 		return ApiResponse.success(user);
 	}
@@ -51,9 +55,5 @@ public class UserController {
 		boolean status = userService.deleteUserById(id);
 		return ApiResponse.success(status);
 	}
-
-
-
-
 
 }

@@ -2,12 +2,12 @@
 package com.duong.springdemoresful.service;
 
 
+import com.duong.springdemoresful.helper.ResourceNotFoundException;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class UserService {
@@ -19,32 +19,26 @@ public class UserService {
 	}
 
 	public List<User> fetchUsers() {
+		return this.userRepository.findAll();
 
-		List<User> userList = this.userRepository.findAll();
-
-		return userList;
 	}
 
 	public User createUser(User user) {
-
 		return userRepository.save(user);
-
 	}
 
 	public User findUserById(int id) {
-		Optional<User> userOpt = this.userRepository.findById(id);
-		return userOpt.get();
+		return this.userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found"));
 	}
 
 	public User updateUser(User inputUser) {
-		User currentUserInDB = this.findUserById(inputUser.getId());
-		if (currentUserInDB != null) {
-			currentUserInDB.setName(inputUser.getName());
-			currentUserInDB.setEmail(inputUser.getEmail());
-			currentUserInDB.setAddress(inputUser.getAddress());
-			 return this.userRepository.save(currentUserInDB);
-		}
-		return null;
+
+		User currentUser = findUserById(inputUser.getId()) ;
+			currentUser.setName(inputUser.getName());
+			currentUser.setEmail(inputUser.getEmail());
+			currentUser.setAddress(inputUser.getAddress());
+			 return this.userRepository.save(currentUser);
+
 	}
 
 	public boolean deleteUserById(int id) {

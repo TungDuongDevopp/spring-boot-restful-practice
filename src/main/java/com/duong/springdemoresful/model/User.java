@@ -32,4 +32,14 @@ public class User {
 
 	public User() {}
 
+	@Override
+	public String toString() {
+		return "User{" +
+				"address='" + address + '\'' +
+				", id=" + id +
+				", name='" + name + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				'}';
+	}
 }

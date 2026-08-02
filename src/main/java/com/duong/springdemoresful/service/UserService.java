@@ -25,9 +25,9 @@ public class UserService {
 		return userList;
 	}
 
-	public void createUser(User user) {
+	public User createUser(User user) {
 
-		this.userRepository.save(user);
+		return userRepository.save(user);
 
 	}
 
@@ -36,19 +36,21 @@ public class UserService {
 		return userOpt.get();
 	}
 
-	public void updateUser(User inputUser) {
+	public User updateUser(User inputUser) {
 		User currentUserInDB = this.findUserById(inputUser.getId());
 		if (currentUserInDB != null) {
 			currentUserInDB.setName(inputUser.getName());
 			currentUserInDB.setEmail(inputUser.getEmail());
 			currentUserInDB.setAddress(inputUser.getAddress());
-
-			this.userRepository.save(currentUserInDB);
+			 return this.userRepository.save(currentUserInDB);
 		}
+		return null;
 	}
 
-	public void deleteUserById(int id) {
-		this.userRepository.deleteById(id);
+	public boolean deleteUserById(int id) {
+		if(!userRepository.existsById(id)) return false;
+		userRepository.deleteById(id);
+		return true;
 	}
 
 }

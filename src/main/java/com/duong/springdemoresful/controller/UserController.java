@@ -1,6 +1,7 @@
 
 package com.duong.springdemoresful.controller;
 
+import com.duong.springdemoresful.helper.ApiResponse;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -20,35 +21,35 @@ public class UserController {
 	}
 
 	@PostMapping("/users")
-	public ResponseEntity<User>createUser(@RequestBody User user){
+	public ResponseEntity<ApiResponse<User>>createUser(@RequestBody User user){
 		User createUser = userService.createUser(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(createUser);
+		return ApiResponse.created(user);
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<List<User>>getAllUsers(){
+	public ResponseEntity<ApiResponse<List<User>>>getAllUsers(){
         List<User> users = userService.fetchUsers();
-		return ResponseEntity.status(HttpStatus.OK).body(users);
+		return ApiResponse.success(users);
 	}
 
 	@GetMapping("/users/{id}")
-	public ResponseEntity<User>getUserById(@PathVariable int id){
+	public ResponseEntity<ApiResponse<User>>getUserById(@PathVariable int id){
 		User user = userService.findUserById(id);
-		return ResponseEntity.ok(user);
+		return ApiResponse.success(user);
 	}
 
 	@PutMapping ("/users/{id}")
-	public ResponseEntity<User>updateUserById(@PathVariable int id, @RequestBody User inputUser){
+	public ResponseEntity<ApiResponse<User>>updateUserById(@PathVariable int id, @RequestBody User inputUser){
 		inputUser.setId(id);
 		User updateUser = userService.updateUser(inputUser);
 
-		return ResponseEntity.ok(updateUser);
+		return ApiResponse.success(updateUser);
 	}
 
 	@DeleteMapping ("/users/{id}")
-	public ResponseEntity<Boolean>deleteUserById(@PathVariable int id){
+	public ResponseEntity<ApiResponse<Boolean>>deleteUserById(@PathVariable int id){
 		boolean status = userService.deleteUserById(id);
-		return ResponseEntity.ok(status);
+		return ApiResponse.success(status);
 	}
 
 

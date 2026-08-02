@@ -10,27 +10,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+@Entity
+@Table(name = "roles")
+public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Long id;
 
 	@NotBlank(message = "name không được để trống")
 	private String name;
 
-	@NotBlank(message = "email không được để trống")
-	private String email;
-
-	@NotBlank(message = "password không được để trống")
-	private String password;
-
-	@NotBlank(message = "address không được để trống")
-	private String address;
-
+	@NotBlank(message = "description không được để trống")
+	private String description;
 }

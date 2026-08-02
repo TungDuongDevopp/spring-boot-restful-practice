@@ -20,8 +20,6 @@ public class UserController {
 		this.userService = userService;
 	}
 
-
-
 	@PostMapping("/users")
 	public ResponseEntity<ApiResponse<User>>createUser(@Valid @RequestBody User user){
 		User createUser = userService.createUser(user);
@@ -34,17 +32,15 @@ public class UserController {
 		return ApiResponse.success(users);
 	}
 
-
-
 	@GetMapping("/users/{id}")
-	public ResponseEntity<ApiResponse<User>>getUserById(@PathVariable int id){
+	public ResponseEntity<ApiResponse<User>>getUserById(@PathVariable Long id){
 
 		User user = userService.findUserById(id);
 		return ApiResponse.success(user);
 	}
 
 	@PutMapping ("/users/{id}")
-	public ResponseEntity<ApiResponse<User>>updateUserById(@PathVariable int id, @Valid @RequestBody User inputUser){
+	public ResponseEntity<ApiResponse<User>>updateUserById(@PathVariable Long id, @Valid @RequestBody User inputUser){
 		inputUser.setId(id);
 		User updateUser = userService.updateUser(inputUser);
 
@@ -52,7 +48,7 @@ public class UserController {
 	}
 
 	@DeleteMapping ("/users/{id}")
-	public ResponseEntity<ApiResponse<Boolean>>deleteUserById(@PathVariable int id){
+	public ResponseEntity<ApiResponse<Boolean>>deleteUserById(@PathVariable Long id){
 		boolean status = userService.deleteUserById(id);
 		return ApiResponse.success(status);
 	}

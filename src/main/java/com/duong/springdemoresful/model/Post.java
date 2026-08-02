@@ -1,13 +1,9 @@
 package com.duong.springdemoresful.model;
 
 import java.time.Instant;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,5 +30,19 @@ public class Post {
 	private Instant createdAt;
 
 	private Instant updatedAt;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	@OneToMany(mappedBy = "post")
+	private List<Comment> comments;
+
+	@ManyToMany
+	@JoinTable(name = "post_tag",
+	joinColumns = @JoinColumn(name = "post_id"),
+	inverseJoinColumns = @JoinColumn(name = "tag_id"))
+	private List<Tag> tags;
+
 
 }

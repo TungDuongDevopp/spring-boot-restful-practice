@@ -2,7 +2,9 @@
 package com.duong.springdemoresful.controller;
 
 import com.duong.springdemoresful.service.UserService;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,12 +19,13 @@ public class HomeController {
 		this.userService = userService;
 	}
 
-	@Value("${hoidanit.secret:default-value}")
-	private String name;
-
 	@GetMapping("/")
 	public String index() {
-
-		return "Hello World from Spring Boot - @hoidanit devtool: " + name;
+		return "Hello World from Spring Boot - @hoidanit devtool: " + "Dương";
+	}
+	@GetMapping("/Duong")
+	public ResponseEntity<String> demoAPI(){
+		//return  new ResponseEntity<String>("Hello World", HttpStatus.CREATED);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body("Hello World");
 	}
 }

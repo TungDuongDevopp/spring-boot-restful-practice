@@ -2,11 +2,13 @@
 package com.duong.springdemoresful.service;
 
 
+import com.duong.springdemoresful.helper.DuplicateResourceException;
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Tag;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final PasswordEncoder encoder;
 
 	public List<User> fetchUsers() {
 		return this.userRepository.findAll();
@@ -23,6 +26,11 @@ public class UserService {
 	}
 
 	public User createUser(User user) {
+		if(userRepository.existsByEmail(user.getEmail())) {
+			throw new DuplicateResourceException("Email already exists");
+		}
+		String hashPassword = encoder.encode(user.getPassword());
+		user.setPassword(hashPassword);
 		return userRepository.save(user);
 	}
 

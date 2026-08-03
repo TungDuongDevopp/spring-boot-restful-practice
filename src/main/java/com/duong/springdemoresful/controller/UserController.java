@@ -1,6 +1,7 @@
 
 package com.duong.springdemoresful.controller;
 
+import com.duong.springdemoresful.dto.UserResponseDto;
 import com.duong.springdemoresful.helper.ApiResponse;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.service.UserService;
@@ -18,8 +19,8 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/users")
-	public ResponseEntity<ApiResponse<User>>createUser(@Valid @RequestBody User user){
-		User createUser = userService.createUser(user);
+	public ResponseEntity<ApiResponse<UserResponseDto>>createUser(@Valid @RequestBody User user){
+		UserResponseDto createUser = userService.createUser(user);
 		return ApiResponse.created(createUser);
 	}
 

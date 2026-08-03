@@ -2,6 +2,8 @@
 package com.duong.springdemoresful.service;
 
 
+import com.duong.springdemoresful.dto.RoleResponseDto;
+import com.duong.springdemoresful.dto.UserRequestDto;
 import com.duong.springdemoresful.dto.UserResponseDto;
 import com.duong.springdemoresful.helper.DuplicateResourceException;
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -24,8 +27,14 @@ public class UserService {
 	private final PasswordEncoder encoder;
 	private final RoleRepository roleRepository;
 
-	public List<User> fetchUsers() {
-		return this.userRepository.findAll();
+	public List<UserResponseDto> fetchUsers() {
+		return this.userRepository.findAll().stream()
+				.map(user->UserResponseDto.builder()
+						.id(user.getId())
+						.name(user.getName())
+						.email(user.getEmail())
+						.role(new RoleResponseDto(user.getRole().getId(),user.getRole().getName()))
+						.build()).collect(Collectors.toList());
 
 	}
 
@@ -44,17 +53,23 @@ public class UserService {
 		return convert(userRepository.save(user));
 	}
 
-	public User findUserById(Long id) {
-		return this.userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found"));
+	public UserResponseDto findUserById(Long id) {
+		return convert(this.userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found")));
 	}
 
-	public User updateUser(User inputUser,Long id) {
+	public UserResponseDto updateUser(UserRequestDto inputUser, Long id) {
 
-		User currentUser = findUserById(id) ;
-			currentUser.setName(inputUser.getName());
-			currentUser.setEmail(inputUser.getEmail());
-			currentUser.setAddress(inputUser.getAddress());
-			 return this.userRepository.save(currentUser);
+		User currentUser = userRepository.findById(id).orElseThrow(
+				()->new ResourceNotFoundException("User not found")
+		);
+		if(inputUser.getRole() != null){
+			currentUser.setRole(inputUser.getRole());
+		}
+		currentUser.setName(inputUser.getName());
+		currentUser.setAddress(inputUser.getAddress());
+
+		return convert(userRepository.save(currentUser));
+
 
 	}
 
@@ -65,7 +80,7 @@ public class UserService {
 				.name(user.getName())
 				.email(user.getEmail())
 				.address(user.getAddress())
-				.role(user.getRole())
+				.role(new RoleResponseDto(user.getRole().getId(),user.getRole().getName()))
 				.build();
 
 	}

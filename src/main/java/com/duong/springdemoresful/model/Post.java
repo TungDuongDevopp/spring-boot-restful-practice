@@ -31,7 +31,7 @@ public class Post {
 
 	private Instant updatedAt;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 

@@ -1,6 +1,7 @@
 
 package com.duong.springdemoresful.controller;
 
+import com.duong.springdemoresful.dto.UserRequestDto;
 import com.duong.springdemoresful.dto.UserResponseDto;
 import com.duong.springdemoresful.helper.ApiResponse;
 import com.duong.springdemoresful.model.User;
@@ -25,21 +26,21 @@ public class UserController {
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<ApiResponse<List<User>>>getAllUsers(){
-        List<User> users = userService.fetchUsers();
+	public ResponseEntity<ApiResponse<List<UserResponseDto>>>getAllUsers(){
+        List<UserResponseDto> users = userService.fetchUsers();
 		return ApiResponse.success(users);
 	}
 
 	@GetMapping("/users/{id}")
-	public ResponseEntity<ApiResponse<User>>getUserById(@PathVariable Long id){
+	public ResponseEntity<ApiResponse<UserResponseDto>>getUserById(@PathVariable Long id){
 
-		User user = userService.findUserById(id);
+		UserResponseDto user = userService.findUserById(id);
 		return ApiResponse.success(user);
 	}
 
 	@PutMapping ("/users/{id}")
-	public ResponseEntity<ApiResponse<User>>updateUserById(@PathVariable Long id, @Valid @RequestBody User inputUser){
-		User updateUser = userService.updateUser(inputUser,id);
+	public ResponseEntity<ApiResponse<UserResponseDto>>updateUserById(@PathVariable Long id, @Valid @RequestBody UserRequestDto inputUser){
+		UserResponseDto updateUser = userService.updateUser(inputUser,id);
 
 		return ApiResponse.success(updateUser);
 	}

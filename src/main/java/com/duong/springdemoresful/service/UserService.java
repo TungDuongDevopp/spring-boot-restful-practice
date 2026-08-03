@@ -3,6 +3,7 @@ package com.duong.springdemoresful.service;
 
 
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
+import com.duong.springdemoresful.model.Tag;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,9 @@ public class UserService {
 		return this.userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found"));
 	}
 
-	public User updateUser(User inputUser) {
+	public User updateUser(User inputUser,Long id) {
 
-		User currentUser = findUserById(inputUser.getId()) ;
+		User currentUser = findUserById(id) ;
 			currentUser.setName(inputUser.getName());
 			currentUser.setEmail(inputUser.getEmail());
 			currentUser.setAddress(inputUser.getAddress());
@@ -39,10 +40,11 @@ public class UserService {
 
 	}
 
-	public boolean deleteUserById(Long id) {
-		if(!userRepository.existsById(id)) return false;
+	public void deleteUserById(Long id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
 		userRepository.deleteById(id);
-		return true;
 	}
 
 }

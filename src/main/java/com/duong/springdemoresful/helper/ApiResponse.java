@@ -31,7 +31,7 @@ public class ApiResponse<T> {
     }
 
     // 2. Success: Trả về HTTP 200 OK + Data + Message tùy chỉnh
-    public static <T> ResponseEntity<ApiResponse<T>> success(T data, String message) {
+    public static <T> ResponseEntity<ApiResponse<T>> success(T data,String message) {
         ApiResponse<T> response = new ApiResponse<>(HttpStatus.OK, message, data, null);
         return ResponseEntity.ok(response);
     }

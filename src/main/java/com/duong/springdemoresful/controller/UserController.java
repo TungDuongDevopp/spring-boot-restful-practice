@@ -5,20 +5,17 @@ import com.duong.springdemoresful.helper.ApiResponse;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.service.UserService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@RequiredArgsConstructor
 @RestController
 public class UserController {
 
 	private final UserService userService;
-
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
 
 	@PostMapping("/users")
 	public ResponseEntity<ApiResponse<User>>createUser(@Valid @RequestBody User user){
@@ -41,16 +38,15 @@ public class UserController {
 
 	@PutMapping ("/users/{id}")
 	public ResponseEntity<ApiResponse<User>>updateUserById(@PathVariable Long id, @Valid @RequestBody User inputUser){
-		inputUser.setId(id);
-		User updateUser = userService.updateUser(inputUser);
+		User updateUser = userService.updateUser(inputUser,id);
 
 		return ApiResponse.success(updateUser);
 	}
 
 	@DeleteMapping ("/users/{id}")
-	public ResponseEntity<ApiResponse<Boolean>>deleteUserById(@PathVariable Long id){
-		boolean status = userService.deleteUserById(id);
-		return ApiResponse.success(status);
+	public ResponseEntity<ApiResponse<Void>>deleteUserById(@PathVariable Long id){
+		userService.deleteUserById(id);
+		return ApiResponse.success(null,"Deleted successfully");
 	}
 
 }

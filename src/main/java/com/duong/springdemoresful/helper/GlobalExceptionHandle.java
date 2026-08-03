@@ -14,8 +14,13 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandle {
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex){
-        return ApiResponse.error(HttpStatus.NOT_FOUND,ex.getMessage());
+    public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
+        return ApiResponse.error(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<?> handleDuplicate(DuplicateResourceException ex) {
+        return ApiResponse.error(HttpStatus.CONFLICT, ex.getMessage());
     }
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<?> handleMisMatched(MethodArgumentTypeMismatchException ex){

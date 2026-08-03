@@ -19,6 +19,7 @@ public class Tag {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@Column(unique = true)
 	@NotBlank(message = "name không được để trống")
 	private String name;
 

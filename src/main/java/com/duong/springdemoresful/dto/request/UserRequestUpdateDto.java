@@ -1,4 +1,4 @@
-package com.duong.springdemoresful.dto;
+package com.duong.springdemoresful.dto.request;
 
 import com.duong.springdemoresful.model.Role;
 import jakarta.validation.constraints.NotBlank;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserRequestDto {
+public class UserRequestUpdateDto {
 
     private Long id;
 

@@ -2,13 +2,13 @@
 package com.duong.springdemoresful.service;
 
 
-import com.duong.springdemoresful.dto.RoleResponseDto;
-import com.duong.springdemoresful.dto.UserRequestDto;
-import com.duong.springdemoresful.dto.UserResponseDto;
+import com.duong.springdemoresful.dto.request.UserRequestCreateDto;
+import com.duong.springdemoresful.dto.response.RoleResponseDto;
+import com.duong.springdemoresful.dto.request.UserRequestUpdateDto;
+import com.duong.springdemoresful.dto.response.UserResponseDto;
 import com.duong.springdemoresful.helper.DuplicateResourceException;
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Role;
-import com.duong.springdemoresful.model.Tag;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.RoleRepository;
 import com.duong.springdemoresful.repository.UserRepository;
@@ -38,26 +38,36 @@ public class UserService {
 
 	}
 
-	public UserResponseDto createUser(User user) {
-		if(userRepository.existsByEmail(user.getEmail())) {
+	public UserResponseDto createUser(UserRequestCreateDto userDto) { // Đổi tên biến cho rõ ràng
+		if(userRepository.existsByEmail(userDto.getEmail())) {
 			throw new DuplicateResourceException("Email already exists");
 		}
-		Long roleId = user.getRole().getId();
-		String roleName = user.getRole().getName();
-		Role existsRole = roleRepository.findByIdOrName(roleId,roleName)
-				.orElseThrow(()->new ResourceNotFoundException("Role not found"));
 
-		String hashPassword = encoder.encode(user.getPassword());
-		user.setPassword(hashPassword);
-		user.setRole(existsRole);
-		return convert(userRepository.save(user));
+		Long roleId = userDto.getRole().getId();
+		String roleName = userDto.getRole().getName();
+		Role existsRole = roleRepository.findByIdOrName(roleId, roleName)
+				.orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+
+		String hashPassword = encoder.encode(userDto.getPassword());
+
+		User userEntity = new User();
+		userEntity.setName(userDto.getName());
+		userEntity.setEmail(userDto.getEmail());
+		userEntity.setPassword(hashPassword);
+		userEntity.setRole(existsRole);
+
+		// 2. Lưu Entity vào Database
+		User savedUser = userRepository.save(userEntity);
+
+		// 3. Chuyển đổi savedUser (Entity) thành UserResponseDto để return
+		return convert(savedUser);
 	}
 
 	public UserResponseDto findUserById(Long id) {
 		return convert(this.userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found")));
 	}
 
-	public UserResponseDto updateUser(UserRequestDto inputUser, Long id) {
+	public UserResponseDto updateUser(UserRequestUpdateDto inputUser, Long id) {
 
 		User currentUser = userRepository.findById(id).orElseThrow(
 				()->new ResourceNotFoundException("User not found")

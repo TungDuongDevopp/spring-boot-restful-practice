@@ -1,4 +1,4 @@
-package com.duong.springdemoresful.dto;
+package com.duong.springdemoresful.dto.response;
 
 
 import lombok.*;

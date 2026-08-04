@@ -1,8 +1,9 @@
 
 package com.duong.springdemoresful.controller;
 
-import com.duong.springdemoresful.dto.UserRequestDto;
-import com.duong.springdemoresful.dto.UserResponseDto;
+import com.duong.springdemoresful.dto.request.UserRequestCreateDto;
+import com.duong.springdemoresful.dto.request.UserRequestUpdateDto;
+import com.duong.springdemoresful.dto.response.UserResponseDto;
 import com.duong.springdemoresful.helper.ApiResponse;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.service.UserService;
@@ -20,7 +21,7 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/users")
-	public ResponseEntity<ApiResponse<UserResponseDto>>createUser(@Valid @RequestBody User user){
+	public ResponseEntity<ApiResponse<UserResponseDto>>createUser(@Valid @RequestBody UserRequestCreateDto user){
 		UserResponseDto createUser = userService.createUser(user);
 		return ApiResponse.created(createUser);
 	}
@@ -39,7 +40,7 @@ public class UserController {
 	}
 
 	@PutMapping ("/users/{id}")
-	public ResponseEntity<ApiResponse<UserResponseDto>>updateUserById(@PathVariable Long id, @Valid @RequestBody UserRequestDto inputUser){
+	public ResponseEntity<ApiResponse<UserResponseDto>>updateUserById(@PathVariable Long id, @Valid @RequestBody UserRequestUpdateDto inputUser){
 		UserResponseDto updateUser = userService.updateUser(inputUser,id);
 
 		return ApiResponse.success(updateUser);

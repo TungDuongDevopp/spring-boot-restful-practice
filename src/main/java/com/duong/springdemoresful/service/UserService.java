@@ -48,7 +48,7 @@ public class UserService {
 
 	}
 
-	public UserResponseDto createUser(UserRequestCreateDto userDto) { // Đổi tên biến cho rõ ràng
+	public UserResponseDto createUser(UserRequestCreateDto userDto) {
 		if(userRepository.existsByEmail(userDto.getEmail())) {
 			throw new DuplicateResourceException("Email already exists");
 		}

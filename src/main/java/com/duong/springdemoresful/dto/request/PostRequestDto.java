@@ -13,6 +13,8 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 public class PostRequestDto {
+
+    private Long id;
     @NotBlank(message = "title không được để trống")
     private String title;
 

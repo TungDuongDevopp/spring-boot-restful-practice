@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,8 +28,15 @@ public class UserController {
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<ApiResponse<List<UserResponseDto>>>getAllUsers(){
-        List<UserResponseDto> users = userService.fetchUsers();
+	public ResponseEntity<ApiResponse<List<UserResponseDto>>>getAllUsers(@RequestParam(required = false) String role){
+		List<UserResponseDto> users;
+		if(role !=null){
+			users = userService.fetchUsersByRole(role);
+		}
+		else{
+			users = userService.fetchUsers();
+		}
+
 		return ApiResponse.success(users);
 	}
 

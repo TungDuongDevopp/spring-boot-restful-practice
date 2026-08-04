@@ -37,6 +37,16 @@ public class UserService {
 						.build()).collect(Collectors.toList());
 
 	}
+	public List<UserResponseDto> fetchUsersByRole(String role) {
+		return this.userRepository.findByRole_Name(role).stream()
+				.map(user->UserResponseDto.builder()
+						.id(user.getId())
+						.name(user.getName())
+						.email(user.getEmail())
+						.role(new RoleResponseDto(user.getRole().getId(),user.getRole().getName()))
+						.build()).collect(Collectors.toList());
+
+	}
 
 	public UserResponseDto createUser(UserRequestCreateDto userDto) { // Đổi tên biến cho rõ ràng
 		if(userRepository.existsByEmail(userDto.getEmail())) {
@@ -66,6 +76,7 @@ public class UserService {
 	public UserResponseDto findUserById(Long id) {
 		return convert(this.userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found")));
 	}
+
 
 	public UserResponseDto updateUser(UserRequestUpdateDto inputUser, Long id) {
 

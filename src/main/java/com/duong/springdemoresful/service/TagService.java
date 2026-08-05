@@ -35,8 +35,8 @@ public class TagService {
         }
         Tag currentTag = getTagById(id);
         currentTag.setName(updateTag.getName());
-        repository.save(currentTag);
-        return currentTag;
+       return repository.save(currentTag);
+
     }
 
     public void deleteTagById(Long id){

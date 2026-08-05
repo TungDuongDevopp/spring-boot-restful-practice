@@ -34,7 +34,7 @@ public class UserService {
 						.name(user.getName())
 						.email(user.getEmail())
 						.role(new RoleResponseDto(user.getRole().getId(),user.getRole().getName()))
-						.build()).collect(Collectors.toList());
+						.build()).toList();
 
 	}
 	public List<UserResponseDto> fetchUsersByRole(String role) {
@@ -44,7 +44,7 @@ public class UserService {
 						.name(user.getName())
 						.email(user.getEmail())
 						.role(new RoleResponseDto(user.getRole().getId(),user.getRole().getName()))
-						.build()).collect(Collectors.toList());
+						.build()).toList();
 
 	}
 
@@ -66,11 +66,7 @@ public class UserService {
 		userEntity.setPassword(hashPassword);
 		userEntity.setRole(existsRole);
 
-		// 2. Lưu Entity vào Database
-		User savedUser = userRepository.save(userEntity);
-
-		// 3. Chuyển đổi savedUser (Entity) thành UserResponseDto để return
-		return convert(savedUser);
+		return convert(userRepository.save(userEntity));
 	}
 
 	public UserResponseDto findUserById(Long id) {
@@ -88,7 +84,6 @@ public class UserService {
 		}
 		currentUser.setName(inputUser.getName());
 		currentUser.setAddress(inputUser.getAddress());
-
 		return convert(userRepository.save(currentUser));
 
 
@@ -109,7 +104,6 @@ public class UserService {
 	public void deleteUserById(Long id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
 		userRepository.deleteById(id);
 	}
 

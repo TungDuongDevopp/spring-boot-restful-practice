@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository repository;
-    private final TagService tagService;
 
     private Post convertDtoToPost(PostRequestDto requestDto){
         Post postEntity = new Post();
@@ -41,7 +40,7 @@ public class PostService {
 
         List<PostResponseDto.OutputTag> tags = post.getTags().stream()
                 .map( tagEntity-> new PostResponseDto.OutputTag(tagEntity.getId(),tagEntity.getName()))
-                .collect(Collectors.toList());
+                .toList();
         return PostResponseDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
@@ -72,7 +71,7 @@ public class PostService {
         currentPost.setContent(updatePost.getContent());
         if(!updatePost.getTags().isEmpty()){
             List<Tag> tags = updatePost.getTags().stream()
-                    .map(tagDto-> new Tag(tagDto.getId(),tagDto.getName(),null)).collect(Collectors.toList());
+                    .map(tagDto-> new Tag(tagDto.getId(),tagDto.getName(),null)).toList();
             currentPost.setTags(tags);
         }
         return convertToDto(repository.save(currentPost));

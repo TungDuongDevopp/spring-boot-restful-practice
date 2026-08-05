@@ -12,6 +12,7 @@ import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.RoleRepository;
 import com.duong.springdemoresful.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,7 @@ public class UserService {
 	}
 
 
+	@Transactional
 	public UserResponseDto updateUser(UserRequestUpdateDto inputUser, Long id) {
 
 		User currentUser = userRepository.findById(id).orElseThrow(
@@ -84,7 +86,7 @@ public class UserService {
 		}
 		currentUser.setName(inputUser.getName());
 		currentUser.setAddress(inputUser.getAddress());
-		return convert(userRepository.save(currentUser));
+		return convert(currentUser);
 
 
 	}

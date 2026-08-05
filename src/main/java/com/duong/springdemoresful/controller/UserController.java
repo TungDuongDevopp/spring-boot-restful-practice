@@ -23,8 +23,7 @@ public class UserController {
 
 	@PostMapping("/users")
 	public ResponseEntity<ApiResponse<UserResponseDto>>createUser(@Valid @RequestBody UserRequestCreateDto user){
-		UserResponseDto createUser = userService.createUser(user);
-		return ApiResponse.created(createUser);
+		return ApiResponse.created(userService.createUser(user));
 	}
 
 	@GetMapping("/users")
@@ -42,16 +41,12 @@ public class UserController {
 
 	@GetMapping("/users/{id}")
 	public ResponseEntity<ApiResponse<UserResponseDto>>getUserById(@PathVariable Long id){
-
-		UserResponseDto user = userService.findUserById(id);
-		return ApiResponse.success(user);
+		return ApiResponse.success( userService.findUserById(id));
 	}
 
 	@PutMapping ("/users/{id}")
 	public ResponseEntity<ApiResponse<UserResponseDto>>updateUserById(@PathVariable Long id, @Valid @RequestBody UserRequestUpdateDto inputUser){
-		UserResponseDto updateUser = userService.updateUser(inputUser,id);
-
-		return ApiResponse.success(updateUser);
+		return ApiResponse.success(userService.updateUser(inputUser,id));
 	}
 
 	@DeleteMapping ("/users/{id}")

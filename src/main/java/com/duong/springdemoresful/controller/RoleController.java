@@ -17,31 +17,28 @@ public class RoleController {
 
     @PostMapping("/roles")
     public ResponseEntity<ApiResponse<Role>> createRole(@Valid @RequestBody Role inputRole){
-        service.create(inputRole);
-        return  ApiResponse.success(inputRole);
+
+        return ApiResponse.success(service.create(inputRole));
     }
 
     @GetMapping("/roles")
     public ResponseEntity<ApiResponse<List<Role>>> getAllRoles(){
-        List<Role> roles = service.getAll();
-        return  ApiResponse.success(roles);
+        return  ApiResponse.success(service.getAll());
     }
     @GetMapping("/roles/{id}")
     public ResponseEntity<ApiResponse<Role>> getRoleById(@PathVariable Long id){
-        Role role = service.getById(id);
-        return  ApiResponse.success(role);
+        return  ApiResponse.success(service.getById(id));
     }
 
     @PutMapping("/roles/{id}")
     public ResponseEntity<ApiResponse<Role>> updateRole(@PathVariable Long id,@Valid @RequestBody Role updateRole){
-        Role currentRole = service.updateById(id,updateRole);
-        return  ApiResponse.success(currentRole);
+        return  ApiResponse.success(service.updateById(id,updateRole));
     }
 
     @DeleteMapping("/roles/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteRole(@PathVariable Long id){
         service.deleteById(id);
-        return  ApiResponse.success(null,"Deleted succsessful!");
+        return ApiResponse.success(null,"Deleted succsessful!");
     }
 
 

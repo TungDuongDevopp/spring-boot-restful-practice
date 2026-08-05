@@ -8,6 +8,7 @@ import com.duong.springdemoresful.model.Post;
 import com.duong.springdemoresful.model.Tag;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -54,7 +55,7 @@ public class PostService {
     }
 
     public List<PostResponseDto> getAllPost(){
-      return repository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
+      return repository.findAll().stream().map(this::convertToDto).toList();
     }
 
     public PostResponseDto getPostById(Long id){
@@ -62,7 +63,7 @@ public class PostService {
                 ()-> new ResourceNotFoundException("Post not found")
         ));
     }
-
+    @Transactional
     public PostResponseDto updatePostById(Long id,PostRequestDto updatePost){
         Post currentPost = repository.findById(id).orElseThrow(
                 ()-> new ResourceNotFoundException("Post not found")
@@ -74,7 +75,7 @@ public class PostService {
                     .map(tagDto-> new Tag(tagDto.getId(),tagDto.getName(),null)).toList();
             currentPost.setTags(tags);
         }
-        return convertToDto(repository.save(currentPost));
+        return convertToDto(currentPost);
     }
     public void deletePostById(Long id){
         Post post = repository.findById(id).orElseThrow(()->new ResourceNotFoundException("Post not found"));

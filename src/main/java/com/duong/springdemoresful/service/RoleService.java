@@ -4,6 +4,7 @@ import com.duong.springdemoresful.helper.DuplicateResourceException;
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.repository.RoleRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +29,12 @@ public class RoleService {
         return repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Role not found"));
     }
 
+    @Transactional
     public Role updateById(Long id, Role updateRole){
         Role currentRole = getById(id);
         currentRole.setName(updateRole.getName());
         currentRole.setDescription(updateRole.getDescription());
-        return repository.save(currentRole);
+        return currentRole;
     }
 
     public void  deleteById(Long id){

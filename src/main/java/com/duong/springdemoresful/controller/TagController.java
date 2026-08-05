@@ -18,27 +18,22 @@ public class TagController {
 
     @PostMapping("/tags")
     public ResponseEntity<ApiResponse<Tag>> createTag(@Valid @RequestBody Tag tag){
-        Tag createTag = service.saveTag(tag);
-        return ApiResponse.created(createTag);
+        return ApiResponse.created(service.saveTag(tag));
 
     }
     @GetMapping("/tags")
     public ResponseEntity<ApiResponse<List<Tag>>> getAllTags(){
-        List<Tag> tags = service.getAllTags();
-        return ApiResponse.success(tags);
+        return ApiResponse.success(service.getAllTags());
     }
 
     @GetMapping("/tags/{id}")
-    public  ResponseEntity<ApiResponse<Tag>> getTagById(@PathVariable Long id){
-        Tag tag = service.getTagById(id);
-        return ApiResponse.success(tag);
+    public ResponseEntity<ApiResponse<Tag>> getTagById(@PathVariable Long id){
+        return ApiResponse.success(service.getTagById(id));
     }
 
     @PutMapping("/tags/{id}")
     public ResponseEntity<ApiResponse<Tag>> updateTag(@PathVariable Long id, @Valid @RequestBody Tag tag){
-
-        Tag updateTag = service.updateTag(tag,id);
-        return ApiResponse.success(updateTag);
+        return ApiResponse.success( service.updateTag(tag,id));
 
     }
     @DeleteMapping("/tags/{id}")

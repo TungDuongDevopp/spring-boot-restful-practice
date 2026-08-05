@@ -2,8 +2,11 @@ package com.duong.springdemoresful.service;
 
 import com.duong.springdemoresful.helper.DuplicateResourceException;
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
+import com.duong.springdemoresful.model.Post;
 import com.duong.springdemoresful.model.Tag;
+import com.duong.springdemoresful.repository.PostRepository;
 import com.duong.springdemoresful.repository.TagRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,7 @@ import java.util.List;
 @Service
 public class TagService {
     final TagRepository repository;
+    final PostRepository postRepository;
 
     public List<Tag> getAllTags(){
         return  repository.findAll();
@@ -28,6 +32,7 @@ public class TagService {
         return repository.save(tag);
     }
 
+    @Transactional
     public Tag updateTag(Tag updateTag,Long id){
 
         if(repository.existsByName(updateTag.getName())){
@@ -35,13 +40,19 @@ public class TagService {
         }
         Tag currentTag = getTagById(id);
         currentTag.setName(updateTag.getName());
-       return repository.save(currentTag);
+       return currentTag;
 
     }
 
     public void deleteTagById(Long id){
         Tag tag = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tag not found"));
+
+        List<Post> posts = postRepository.findByTagsContains(tag);
+        for(Post post : posts){
+            post.getTags().remove(tag);
+            postRepository.save(post);
+        }
 
         repository.delete(tag);
     }

@@ -17,12 +17,18 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class JwtConfig {
+public class JwtService {
     public static final MacAlgorithm JWT_ALGORITHM = MacAlgorithm.HS256;
     private final JwtEncoder jwtEncoder;
 
     @Value("${duong.jwt.access-token-validity-in-seconds}")
     private String accessTokenExpiration;
+
+    public String getScope(Authentication auth){
+        return auth != null ? auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" ")) : "UNKNOWN";
+    }
 
     public String createAccessToken(Authentication auth){
 
@@ -33,17 +39,12 @@ public class JwtConfig {
         //Tính time hết hạn
         Instant validity = now.plus(Long.parseLong(accessTokenExpiration), ChronoUnit.SECONDS);
 
-
-        String scope = auth.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
-
         //Tạo payload
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(auth.getName())
-                .claim("scope",scope)
+                .claim("scope",getScope(auth))
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();

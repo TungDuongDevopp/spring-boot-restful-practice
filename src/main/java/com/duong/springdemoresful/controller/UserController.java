@@ -9,6 +9,7 @@ import com.duong.springdemoresful.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class UserController {
 	public ResponseEntity<ApiResponse<UserResponse>>createUser(@Valid @RequestBody UserRequestCreate user){
 		return ApiResponse.created(userService.createUser(user));
 	}
+
 
 	@GetMapping("/users")
 	public ResponseEntity<ApiResponse<List<UserResponse>>>getAllUsers(@RequestParam(required = false) String role){

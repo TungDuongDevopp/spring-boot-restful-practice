@@ -12,6 +12,8 @@ import lombok.Setter;
 public class LoginResponse {
     private String accessToken;
 
+    private String refreshToken;
+
     private String tokenType = "Bearer";
 
     private UserLogin user;
@@ -21,6 +23,7 @@ public class LoginResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UserLogin{
+        private Long id;
         private String username;
         private String role;
     }

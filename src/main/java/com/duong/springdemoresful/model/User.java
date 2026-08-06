@@ -1,6 +1,5 @@
 package com.duong.springdemoresful.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -42,5 +41,8 @@ public class User {
 
 	@OneToMany(mappedBy = "user")
 	private List<Post> posts;
+
+	@OneToMany(mappedBy = "user")
+	private List<RefreshToken> refreshTokens;
 
 }

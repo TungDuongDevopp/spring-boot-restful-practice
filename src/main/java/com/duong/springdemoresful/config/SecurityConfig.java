@@ -36,6 +36,13 @@ public class SecurityConfig {
     @Value("${duong.jwt.base64-secret}")
     private String jwtKey;
 
+    private SecretKey getSecretKey() {
+        byte[] keyBytes = Base64.from(jwtKey).decode();
+
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length,
+                JwtService.JWT_ALGORITHM.getName());
+    }
+
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
@@ -45,6 +52,7 @@ public class SecurityConfig {
     UserDetailsService userDetailsService(UserService service){
         return new CustomerDetailService(service);
     }
+
     @Bean
     AuthenticationManager authenticationManager(UserDetailsService userDetailsService,PasswordEncoder encoder){
     DaoAuthenticationProvider dao = new DaoAuthenticationProvider(userDetailsService);
@@ -57,7 +65,7 @@ public class SecurityConfig {
                                             CustomAuthenticationEntryPoint entryPoint){
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/login","/auth/refresh").permitAll()
                         .requestMatchers("/users/**","/roles/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
@@ -87,6 +95,7 @@ public class SecurityConfig {
                 .macAlgorithm(JwtService.JWT_ALGORITHM)
                 .build();
     }
+
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter scopeConverter = new JwtGrantedAuthoritiesConverter();
@@ -99,12 +108,5 @@ public class SecurityConfig {
     }
 
 
-
-    private SecretKey getSecretKey() {
-        byte[] keyBytes = Base64.from(jwtKey).decode();
-
-        return new SecretKeySpec(keyBytes, 0, keyBytes.length,
-                JwtService.JWT_ALGORITHM.getName());
-    }
 
 }

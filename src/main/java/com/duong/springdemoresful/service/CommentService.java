@@ -2,7 +2,7 @@ package com.duong.springdemoresful.service;
 
 import com.duong.springdemoresful.dto.request.CommentRequest;
 import com.duong.springdemoresful.dto.response.CommentResponse;
-import com.duong.springdemoresful.helper.ResourceNotFoundException;
+import com.duong.springdemoresful.helper.exception.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Comment;
 import com.duong.springdemoresful.model.Post;
 import com.duong.springdemoresful.model.User;

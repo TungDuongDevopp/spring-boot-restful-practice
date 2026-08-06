@@ -1,7 +1,7 @@
 package com.duong.springdemoresful.service;
 
-import com.duong.springdemoresful.helper.DuplicateResourceException;
-import com.duong.springdemoresful.helper.ResourceNotFoundException;
+import com.duong.springdemoresful.helper.exception.DuplicateResourceException;
+import com.duong.springdemoresful.helper.exception.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.repository.RoleRepository;
 import jakarta.transaction.Transactional;

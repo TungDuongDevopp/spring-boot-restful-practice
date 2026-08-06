@@ -1,5 +1,7 @@
 package com.duong.springdemoresful.config;
 
+import com.duong.springdemoresful.helper.exception.CustomAccessDeniedHandler;
+import com.duong.springdemoresful.helper.exception.CustomAuthenticationEntryPoint;
 import com.duong.springdemoresful.service.UserService;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
@@ -12,6 +14,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,7 +53,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http){
+    SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAccessDeniedHandler deniedHandler,
+                                            CustomAuthenticationEntryPoint entryPoint){
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
@@ -59,9 +63,16 @@ public class SecurityConfig {
                 );
         http.formLogin(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
-        http.oauth2ResourceServer(oauth2->oauth2.jwt(
+        http.sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
+        http.oauth2ResourceServer(oauth2->oauth2
+                .accessDeniedHandler(deniedHandler)
+                .authenticationEntryPoint(entryPoint)
+                .jwt(
                 jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
         ));
+
         return http.build();
     }
 

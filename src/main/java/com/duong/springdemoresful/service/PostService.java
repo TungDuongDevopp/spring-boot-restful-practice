@@ -3,7 +3,7 @@ package com.duong.springdemoresful.service;
 import com.duong.springdemoresful.dto.request.PostRequest;
 
 import com.duong.springdemoresful.dto.response.PostResponse;
-import com.duong.springdemoresful.helper.ResourceNotFoundException;
+import com.duong.springdemoresful.helper.exception.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Post;
 import com.duong.springdemoresful.model.Tag;
 import com.duong.springdemoresful.model.User;

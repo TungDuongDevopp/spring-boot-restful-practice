@@ -6,8 +6,8 @@ import com.duong.springdemoresful.dto.request.UserRequestCreate;
 import com.duong.springdemoresful.dto.response.RoleResponse;
 import com.duong.springdemoresful.dto.request.UserRequestUpdate;
 import com.duong.springdemoresful.dto.response.UserResponse;
-import com.duong.springdemoresful.helper.DuplicateResourceException;
-import com.duong.springdemoresful.helper.ResourceNotFoundException;
+import com.duong.springdemoresful.helper.exception.DuplicateResourceException;
+import com.duong.springdemoresful.helper.exception.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.RoleRepository;
@@ -21,6 +21,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+
 public class UserService {
 
 	private final UserRepository userRepository;

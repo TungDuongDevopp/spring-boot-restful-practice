@@ -3,22 +3,14 @@ package com.duong.springdemoresful.dto.response;
 
 import lombok.*;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-
-public class UserResponseDto {
+public class RoleResponse {
 
     private Long id;
 
     private String name;
-
-    private String email;
-
-    private String address;
-
-    private RoleResponseDto role;
-
 }

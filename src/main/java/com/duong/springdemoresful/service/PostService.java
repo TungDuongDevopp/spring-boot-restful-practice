@@ -1,8 +1,8 @@
 package com.duong.springdemoresful.service;
 
-import com.duong.springdemoresful.dto.request.PostRequestDto;
+import com.duong.springdemoresful.dto.request.PostRequest;
 
-import com.duong.springdemoresful.dto.response.PostResponseDto;
+import com.duong.springdemoresful.dto.response.PostResponse;
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Post;
 import com.duong.springdemoresful.model.Tag;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository repository;
 
-    private Post convertDtoToPost(PostRequestDto requestDto){
+    private Post convertDtoToPost(PostRequest requestDto){
         Post postEntity = new Post();
         postEntity.setId(requestDto.getId());
         postEntity.setTitle(requestDto.getTitle());
@@ -37,12 +37,12 @@ public class PostService {
 
     }
 
-    private PostResponseDto convertToDto(Post post){
+    private PostResponse convertToDto(Post post){
 
-        List<PostResponseDto.OutputTag> tags = post.getTags().stream()
-                .map( tagEntity-> new PostResponseDto.OutputTag(tagEntity.getId(),tagEntity.getName()))
+        List<PostResponse.OutputTag> tags = post.getTags().stream()
+                .map( tagEntity-> new PostResponse.OutputTag(tagEntity.getId(),tagEntity.getName()))
                 .toList();
-        return PostResponseDto.builder()
+        return PostResponse.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
@@ -50,21 +50,21 @@ public class PostService {
                 .build();
     }
 
-    public PostResponseDto creatPost(PostRequestDto postRequestDto){
-        return convertToDto(repository.save(convertDtoToPost(postRequestDto)));
+    public PostResponse creatPost(PostRequest postRequest){
+        return convertToDto(repository.save(convertDtoToPost(postRequest)));
     }
 
-    public List<PostResponseDto> getAllPost(){
+    public List<PostResponse> getAllPost(){
       return repository.findAll().stream().map(this::convertToDto).toList();
     }
 
-    public PostResponseDto getPostById(Long id){
+    public PostResponse getPostById(Long id){
         return  convertToDto(repository.findById(id).orElseThrow(
                 ()-> new ResourceNotFoundException("Post not found")
         ));
     }
     @Transactional
-    public PostResponseDto updatePostById(Long id,PostRequestDto updatePost){
+    public PostResponse updatePostById(Long id, PostRequest updatePost){
         Post currentPost = repository.findById(id).orElseThrow(
                 ()-> new ResourceNotFoundException("Post not found")
         );

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Builder
 @Getter @Setter
-public class CommentResponseDto {
+public class CommentResponse {
     private Long id;
 
     private String content;

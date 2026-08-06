@@ -1,12 +1,15 @@
 package com.duong.springdemoresful.config;
 
+import com.duong.springdemoresful.service.UserService;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -28,6 +31,17 @@ public class SecurityConfig {
     }
 
     @Bean
+    UserDetailsService userDetailsService(UserService service){
+        return new CustomerDetailService(service);
+    }
+    @Bean
+    DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService,PasswordEncoder encoder){
+    DaoAuthenticationProvider dao = new DaoAuthenticationProvider(userDetailsService);
+    dao.setPasswordEncoder(passwordEncoder());
+    return dao;
+    }
+
+    @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http){
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -44,6 +58,7 @@ public class SecurityConfig {
 
     private SecretKey getSecretKey() {
         byte[] keyBytes = Base64.from(jwtKey).decode();
+
         return new SecretKeySpec(keyBytes, 0, keyBytes.length,
                 JwtConfig.JWT_ALGORITHM.getName());
     }

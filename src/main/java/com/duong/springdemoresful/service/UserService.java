@@ -2,10 +2,10 @@
 package com.duong.springdemoresful.service;
 
 
-import com.duong.springdemoresful.dto.request.UserRequestCreateDto;
-import com.duong.springdemoresful.dto.response.RoleResponseDto;
-import com.duong.springdemoresful.dto.request.UserRequestUpdateDto;
-import com.duong.springdemoresful.dto.response.UserResponseDto;
+import com.duong.springdemoresful.dto.request.UserRequestCreate;
+import com.duong.springdemoresful.dto.response.RoleResponse;
+import com.duong.springdemoresful.dto.request.UserRequestUpdate;
+import com.duong.springdemoresful.dto.response.UserResponse;
 import com.duong.springdemoresful.helper.DuplicateResourceException;
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Role;
@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -28,28 +27,28 @@ public class UserService {
 	private final PasswordEncoder encoder;
 	private final RoleRepository roleRepository;
 
-	public List<UserResponseDto> fetchUsers() {
+	public List<UserResponse> fetchUsers() {
 		return this.userRepository.findAll().stream()
-				.map(user->UserResponseDto.builder()
+				.map(user-> UserResponse.builder()
 						.id(user.getId())
 						.name(user.getName())
 						.email(user.getEmail())
-						.role(new RoleResponseDto(user.getRole().getId(),user.getRole().getName()))
+						.role(new RoleResponse(user.getRole().getId(),user.getRole().getName()))
 						.build()).toList();
 
 	}
-	public List<UserResponseDto> fetchUsersByRole(String role) {
+	public List<UserResponse> fetchUsersByRole(String role) {
 		return this.userRepository.findByRole_Name(role).stream()
-				.map(user->UserResponseDto.builder()
+				.map(user-> UserResponse.builder()
 						.id(user.getId())
 						.name(user.getName())
 						.email(user.getEmail())
-						.role(new RoleResponseDto(user.getRole().getId(),user.getRole().getName()))
+						.role(new RoleResponse(user.getRole().getId(),user.getRole().getName()))
 						.build()).toList();
 
 	}
 
-	public UserResponseDto createUser(UserRequestCreateDto userDto) {
+	public UserResponse createUser(UserRequestCreate userDto) {
 		if(userRepository.existsByEmail(userDto.getEmail())) {
 			throw new DuplicateResourceException("Email already exists");
 		}
@@ -70,13 +69,13 @@ public class UserService {
 		return convert(userRepository.save(userEntity));
 	}
 
-	public UserResponseDto findUserById(Long id) {
+	public UserResponse findUserById(Long id) {
 		return convert(this.userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found")));
 	}
 
 
 	@Transactional
-	public UserResponseDto updateUser(UserRequestUpdateDto inputUser, Long id) {
+	public UserResponse updateUser(UserRequestUpdate inputUser, Long id) {
 
 		User currentUser = userRepository.findById(id).orElseThrow(
 				()->new ResourceNotFoundException("User not found")
@@ -91,16 +90,19 @@ public class UserService {
 
 	}
 
-	public UserResponseDto convert(User user){
+	public UserResponse convert(User user){
 
-		return UserResponseDto.builder()
+		return UserResponse.builder()
 				.id(user.getId())
 				.name(user.getName())
 				.email(user.getEmail())
 				.address(user.getAddress())
-				.role(new RoleResponseDto(user.getRole().getId(),user.getRole().getName()))
+				.role(new RoleResponse(user.getRole().getId(),user.getRole().getName()))
 				.build();
 
+	}
+	public User getUserByEmail(String email){
+		return userRepository.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("Customer not found"));
 	}
 
 	public void deleteUserById(Long id) {

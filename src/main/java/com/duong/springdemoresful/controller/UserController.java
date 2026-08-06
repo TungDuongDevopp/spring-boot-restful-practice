@@ -1,18 +1,16 @@
 
 package com.duong.springdemoresful.controller;
 
-import com.duong.springdemoresful.dto.request.UserRequestCreateDto;
-import com.duong.springdemoresful.dto.request.UserRequestUpdateDto;
-import com.duong.springdemoresful.dto.response.UserResponseDto;
+import com.duong.springdemoresful.dto.request.UserRequestCreate;
+import com.duong.springdemoresful.dto.request.UserRequestUpdate;
+import com.duong.springdemoresful.dto.response.UserResponse;
 import com.duong.springdemoresful.helper.ApiResponse;
-import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,13 +20,13 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/users")
-	public ResponseEntity<ApiResponse<UserResponseDto>>createUser(@Valid @RequestBody UserRequestCreateDto user){
+	public ResponseEntity<ApiResponse<UserResponse>>createUser(@Valid @RequestBody UserRequestCreate user){
 		return ApiResponse.created(userService.createUser(user));
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<ApiResponse<List<UserResponseDto>>>getAllUsers(@RequestParam(required = false) String role){
-		List<UserResponseDto> users;
+	public ResponseEntity<ApiResponse<List<UserResponse>>>getAllUsers(@RequestParam(required = false) String role){
+		List<UserResponse> users;
 		if(role !=null){
 			users = userService.fetchUsersByRole(role);
 		}
@@ -40,12 +38,12 @@ public class UserController {
 	}
 
 	@GetMapping("/users/{id}")
-	public ResponseEntity<ApiResponse<UserResponseDto>>getUserById(@PathVariable Long id){
+	public ResponseEntity<ApiResponse<UserResponse>>getUserById(@PathVariable Long id){
 		return ApiResponse.success( userService.findUserById(id));
 	}
 
 	@PutMapping ("/users/{id}")
-	public ResponseEntity<ApiResponse<UserResponseDto>>updateUserById(@PathVariable Long id, @Valid @RequestBody UserRequestUpdateDto inputUser){
+	public ResponseEntity<ApiResponse<UserResponse>>updateUserById(@PathVariable Long id, @Valid @RequestBody UserRequestUpdate inputUser){
 		return ApiResponse.success(userService.updateUser(inputUser,id));
 	}
 

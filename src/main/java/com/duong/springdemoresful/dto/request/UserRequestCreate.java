@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @Getter @Setter
-public class UserRequestCreateDto {
+public class UserRequestCreate {
 
     private Long id;
 

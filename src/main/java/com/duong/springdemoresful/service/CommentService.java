@@ -1,7 +1,7 @@
 package com.duong.springdemoresful.service;
 
-import com.duong.springdemoresful.dto.request.CommentRequestDto;
-import com.duong.springdemoresful.dto.response.CommentResponseDto;
+import com.duong.springdemoresful.dto.request.CommentRequest;
+import com.duong.springdemoresful.dto.response.CommentResponse;
 import com.duong.springdemoresful.helper.ResourceNotFoundException;
 import com.duong.springdemoresful.model.Comment;
 import com.duong.springdemoresful.model.Post;
@@ -18,7 +18,7 @@ import java.util.List;
 public class CommentService {
     private final CommentRepository repository;
 
-    private Comment toEntity(CommentRequestDto requestDto){
+    private Comment toEntity(CommentRequest requestDto){
         Comment comment = new Comment();
         comment.setId(requestDto.getId());
         comment.setContent(requestDto.getContent());
@@ -32,12 +32,12 @@ public class CommentService {
 
     }
 
-    private CommentResponseDto toDto(Comment comment){
-        CommentResponseDto.OutputUser user = new CommentResponseDto.OutputUser();
+    private CommentResponse toDto(Comment comment){
+        CommentResponse.OutputUser user = new CommentResponse.OutputUser();
         user.setId(comment.getUser().getId());
-        CommentResponseDto.OutputPost post = new CommentResponseDto.OutputPost();
+        CommentResponse.OutputPost post = new CommentResponse.OutputPost();
         post.setId(comment.getPost().getId());
-        return CommentResponseDto.builder()
+        return CommentResponse.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
                 .user(user)
@@ -45,15 +45,15 @@ public class CommentService {
                 .build();
     }
 
-    public List<CommentResponseDto> getAllComments(){
+    public List<CommentResponse> getAllComments(){
         return repository.findAll().stream().map(this::toDto).toList();
     }
 
-    public CommentResponseDto getCommentById(Long id){
+    public CommentResponse getCommentById(Long id){
         return toDto(repository.findById(id).orElseThrow(()->new ResourceNotFoundException("Comment not found")));
     }
 
-    public CommentResponseDto createComment(CommentRequestDto requestDto){
+    public CommentResponse createComment(CommentRequest requestDto){
         return toDto(repository.save(toEntity(requestDto)));
     }
 
@@ -62,7 +62,7 @@ public class CommentService {
         repository.delete(comment);
     }
     @Transactional
-    public CommentResponseDto updateCommentById(Long id,CommentRequestDto requestDto){
+    public CommentResponse updateCommentById(Long id, CommentRequest requestDto){
         Comment currentComment = repository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Comment not found"));
         currentComment.setContent(requestDto.getContent());
         User user = new User();

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserRequestUpdateDto {
+public class UserRequestUpdate {
 
     private Long id;
 

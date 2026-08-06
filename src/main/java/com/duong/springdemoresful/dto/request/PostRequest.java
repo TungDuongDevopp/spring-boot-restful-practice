@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
-public class PostRequestDto {
+public class PostRequest {
 
     private Long id;
     @NotBlank(message = "title không được để trống")

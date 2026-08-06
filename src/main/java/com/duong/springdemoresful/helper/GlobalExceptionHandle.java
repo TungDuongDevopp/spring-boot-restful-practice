@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandle {
 
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleAllException(Exception ex){
-        System.out.println(ex);
         return ApiResponse.error(HttpStatus.BAD_GATEWAY,ex.getMessage());
     }
     @ExceptionHandler(ResourceNotFoundException.class)

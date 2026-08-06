@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentRequestDto {
+public class CommentRequest {
 
     private Long id;
 

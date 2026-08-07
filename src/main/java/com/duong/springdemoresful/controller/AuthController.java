@@ -92,7 +92,7 @@ public class AuthController {
                 .maxAge(Long.parseLong(refreshTokenExpiration))
                 .build();
 
-        ApiResponse<ExchangeTokenResponse> finalData = new ApiResponse<>(HttpStatus.OK,"",exchangeTokenResponse,"");
+        ApiResponse<ExchangeTokenResponse> finalData = new ApiResponse<>(HttpStatus.OK,"Login Sucessful",exchangeTokenResponse,null);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(finalData);

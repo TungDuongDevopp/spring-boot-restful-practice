@@ -3,6 +3,8 @@ package com.duong.springdemoresful.model;
 import java.time.Instant;
 import java.util.List;
 
+import com.duong.springdemoresful.dto.response.LoginResponse;
+import com.duong.springdemoresful.helper.SecurityUtil;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -45,5 +47,13 @@ public class Post {
 	inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private List<Tag> tags;
 
+	@PrePersist
+	public void preCreate(){
+		createdAt = Instant.now();
+		updatedAt = Instant.now();
+		User u = new User();
+		u.setId(SecurityUtil.getCurrentIdLogin());
+		user = u;
+	}
 
 }

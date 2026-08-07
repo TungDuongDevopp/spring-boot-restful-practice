@@ -65,8 +65,8 @@ public class SecurityConfig {
                                             CustomAuthenticationEntryPoint entryPoint){
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login","/auth/refresh").permitAll()
-                        .requestMatchers("/users/**","/roles/**").hasRole("ADMIN")
+                        .requestMatchers("/auth/login","/auth/refresh","/auth/refresh-with-cookie","/auth/logout").permitAll()
+                        .requestMatchers("/users/**","/roles/**","/auth/account").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
         http.formLogin(AbstractHttpConfigurer::disable);

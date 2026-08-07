@@ -2,12 +2,15 @@ package com.duong.springdemoresful.config;
 
 import com.duong.springdemoresful.dto.response.ExchangeTokenResponse;
 import com.duong.springdemoresful.dto.response.LoginResponse;
+import com.duong.springdemoresful.helper.ApiResponse;
 import com.duong.springdemoresful.helper.exception.ResourceNotFoundException;
 import com.duong.springdemoresful.model.RefreshToken;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -27,7 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtService {
     public static final MacAlgorithm JWT_ALGORITHM = MacAlgorithm.HS256;
-    public static final Instant NOW = Instant.now();
+
 
     private final JwtEncoder jwtEncoder;
     private final RefreshTokenService refreshTokenService;
@@ -47,10 +50,11 @@ public class JwtService {
     }
 
     public String createAccessToken(Long id, String username,String role){
-        Instant validityAccessToken = NOW.plus(Long.parseLong(accessTokenExpiration), ChronoUnit.SECONDS);
+        Instant now = Instant.now();
+        Instant validityAccessToken = now.plus(Long.parseLong(accessTokenExpiration), ChronoUnit.SECONDS);
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .issuedAt(NOW)
+                .issuedAt(now)
                 .expiresAt(validityAccessToken)
                 .subject(username)
                 .claim("id",id)
@@ -65,6 +69,8 @@ public class JwtService {
       return createAccessToken(id,auth.getName(),scope);
     }
 
+
+
     public String generateSecureToken() {
         byte[] randomBytes = new byte[64]; // 512 bits
         SecureRandom secureRandom = new SecureRandom();
@@ -73,10 +79,11 @@ public class JwtService {
     }
 
     public String createRefreshToken(User user){
-        Instant validityRefreshToken = NOW.plus(Long.parseLong(refreshTokenExpiration), ChronoUnit.SECONDS);
+        Instant now = Instant.now();
+        Instant validityRefreshToken = now.plus(Long.parseLong(refreshTokenExpiration), ChronoUnit.SECONDS);
         RefreshToken refreshToken = new RefreshToken();
         String token = generateSecureToken();
-        refreshToken.setCreatedAt(NOW);
+        refreshToken.setCreatedAt(now);
         refreshToken.setExpiredAt(validityRefreshToken);
         refreshToken.setToken(token);
         refreshToken.setUser(user);
@@ -85,9 +92,10 @@ public class JwtService {
     }
 
     public ExchangeTokenResponse handleExchangeToken(String token){
+        Instant now = Instant.now();
         RefreshToken refreshToken = refreshTokenService.findByToken(token);
 
-        if(NOW.isAfter(refreshToken.getExpiredAt())){
+        if(now.isAfter(refreshToken.getExpiredAt())){
             throw new ResourceNotFoundException("Token expired");
         }
         User currentUser = refreshToken.getUser();

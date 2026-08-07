@@ -61,10 +61,9 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(Long.parseLong(refreshTokenExpiration))
-                .sameSite("None")
                 .build();
         ApiResponse<LoginResponse> finalData = new ApiResponse<>(HttpStatus.OK,"",response,"");
 
@@ -77,6 +76,26 @@ public class AuthController {
     public ResponseEntity<ApiResponse<ExchangeTokenResponse>> postRefreshToken(@RequestParam("token") String refreshToken){
         return ApiResponse.success(jwtService.handleExchangeToken(refreshToken));
 
+    }
+    @PostMapping("/refresh-with-cookie")
+    public ResponseEntity<ApiResponse<ExchangeTokenResponse>> refreshWithCookie(
+            @CookieValue(value = "refresh_token") String refreshToken) {
+
+        ExchangeTokenResponse exchangeTokenResponse =
+                jwtService.handleExchangeToken(refreshToken);
+
+        ResponseCookie responseCookie = ResponseCookie
+                .from("refresh_token", exchangeTokenResponse.getRefreshToken())
+                .httpOnly(true)
+                .secure(false) // localhost
+                .path("/")
+                .maxAge(Long.parseLong(refreshTokenExpiration))
+                .build();
+
+        ApiResponse<ExchangeTokenResponse> finalData = new ApiResponse<>(HttpStatus.OK,"",exchangeTokenResponse,"");
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(finalData);
     }
     @GetMapping("/account")
     public ResponseEntity<ApiResponse<LoginResponse.UserLogin>> getAccount(){
@@ -93,18 +112,15 @@ public class AuthController {
     }
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<String>>logout(@AuthenticationPrincipal Jwt jwt,
-                         @CookieValue(required = false) String refreshToken){
+                         @CookieValue(value = "refresh_token",required = false) String refreshToken){
         RefreshToken currentToken = refreshTokenService.findByToken(refreshToken);
         refreshTokenService.deleteTokenById(currentToken.getId());
-        String userId = jwt.getClaimAsString("id");
-        String username = jwt.getSubject();
 
         ResponseCookie deleteCokie= ResponseCookie.from("refresh_token", null)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(0)
-                .sameSite("None")
                 .build();
         ApiResponse<String> finalData = new ApiResponse<>(HttpStatus.OK,"","ok","");
 

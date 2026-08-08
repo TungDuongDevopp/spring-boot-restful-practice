@@ -1,6 +1,7 @@
 
 package com.duong.springdemoresful.controller;
 
+import com.duong.springdemoresful.dto.request.UserFilterRequest;
 import com.duong.springdemoresful.dto.request.UserRequestCreate;
 import com.duong.springdemoresful.dto.request.UserRequestUpdate;
 import com.duong.springdemoresful.dto.response.UserResponse;
@@ -28,11 +29,10 @@ public class UserController {
 
 
 	@GetMapping("/users")
-	public ResponseEntity<ApiResponse<PageResponse<UserResponse>>>getAllUsers(
+	public ResponseEntity<ApiResponse<PageResponse<UserResponse>>>getAllUsers(UserFilterRequest filterRequest,
 	        Pageable pageable){
 
- 	Page<UserResponse> users;
-			users = userService.fetchUsers(pageable);
+ 	Page<UserResponse> users= userService.fetchUsers(pageable,filterRequest);
 		return ApiResponse.success(PageResponse.from(users));
 	}
 

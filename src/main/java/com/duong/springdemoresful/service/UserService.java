@@ -2,6 +2,7 @@
 package com.duong.springdemoresful.service;
 
 
+import com.duong.springdemoresful.dto.request.UserFilterRequest;
 import com.duong.springdemoresful.dto.request.UserRequestCreate;
 import com.duong.springdemoresful.dto.response.RoleResponse;
 import com.duong.springdemoresful.dto.request.UserRequestUpdate;
@@ -12,14 +13,14 @@ import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.RoleRepository;
 import com.duong.springdemoresful.repository.UserRepository;
+import com.duong.springdemoresful.service.specification.UserSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.List;
-
 
 @RequiredArgsConstructor
 @Service
@@ -30,8 +31,15 @@ public class UserService {
 	private final PasswordEncoder encoder;
 	private final RoleRepository roleRepository;
 
-	public Page<UserResponse> fetchUsers(Pageable pageable) {
-		return this.userRepository.findAll(pageable)
+	public Page<UserResponse> fetchUsers(Pageable pageable, UserFilterRequest filterRequest) {
+		Specification<User> specification = Specification.allOf(
+				UserSpecification.hasName(filterRequest),
+				UserSpecification.hasRole(filterRequest)
+
+
+		);
+
+		return this.userRepository.findAll(specification,pageable)
 				.map(user-> UserResponse.builder()
 						.id(user.getId())
 						.name(user.getName())
@@ -40,16 +48,7 @@ public class UserService {
 						.build());
 
 	}
-	public List<UserResponse> fetchUsersByRole(String role) {
-		return this.userRepository.findByRole_Name(role).stream()
-				.map(user-> UserResponse.builder()
-						.id(user.getId())
-						.name(user.getName())
-						.email(user.getEmail())
-						.role(new RoleResponse(user.getRole().getId(),user.getRole().getName()))
-						.build()).toList();
 
-	}
 
 	public UserResponse createUser(UserRequestCreate userDto) {
 		if(userRepository.existsByEmail(userDto.getEmail())) {

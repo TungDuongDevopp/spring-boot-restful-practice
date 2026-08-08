@@ -5,14 +5,15 @@ import com.duong.springdemoresful.dto.request.UserRequestCreate;
 import com.duong.springdemoresful.dto.request.UserRequestUpdate;
 import com.duong.springdemoresful.dto.response.UserResponse;
 import com.duong.springdemoresful.helper.ApiResponse;
+import com.duong.springdemoresful.helper.PageResponse;
+
 import com.duong.springdemoresful.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,16 +28,12 @@ public class UserController {
 
 
 	@GetMapping("/users")
-	public ResponseEntity<ApiResponse<List<UserResponse>>>getAllUsers(@RequestParam(required = false) String role){
-		List<UserResponse> users;
-		if(role !=null){
-			users = userService.fetchUsersByRole(role);
-		}
-		else{
-			users = userService.fetchUsers();
-		}
+	public ResponseEntity<ApiResponse<PageResponse<UserResponse>>>getAllUsers(
+	        Pageable pageable){
 
-		return ApiResponse.success(users);
+ 	Page<UserResponse> users;
+			users = userService.fetchUsers(pageable);
+		return ApiResponse.success(PageResponse.from(users));
 	}
 
 	@GetMapping("/users/{id}")

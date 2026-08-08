@@ -14,6 +14,8 @@ import com.duong.springdemoresful.repository.RoleRepository;
 import com.duong.springdemoresful.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -28,14 +30,14 @@ public class UserService {
 	private final PasswordEncoder encoder;
 	private final RoleRepository roleRepository;
 
-	public List<UserResponse> fetchUsers() {
-		return this.userRepository.findAll().stream()
+	public Page<UserResponse> fetchUsers(Pageable pageable) {
+		return this.userRepository.findAll(pageable)
 				.map(user-> UserResponse.builder()
 						.id(user.getId())
 						.name(user.getName())
 						.email(user.getEmail())
 						.role(new RoleResponse(user.getRole().getId(),user.getRole().getName()))
-						.build()).toList();
+						.build());
 
 	}
 	public List<UserResponse> fetchUsersByRole(String role) {

@@ -63,9 +63,17 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAccessDeniedHandler deniedHandler,
                                             CustomAuthenticationEntryPoint entryPoint){
+
+         String[] WHITELIST = {
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                 "/auth/login","/auth/refresh","/auth/refresh-with-cookie"
+        };
+
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login","/auth/refresh","/auth/refresh-with-cookie","/auth/logout").permitAll()
+                        .requestMatchers(WHITELIST).permitAll()
                         .requestMatchers("/users/**","/roles/**","/auth/account").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );

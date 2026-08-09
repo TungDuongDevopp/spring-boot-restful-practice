@@ -1,15 +1,17 @@
 package com.duong.springdemoresful.controller;
 
+import com.duong.springdemoresful.dto.request.CommentFilterRequest;
 import com.duong.springdemoresful.dto.request.CommentRequest;
 import com.duong.springdemoresful.dto.response.CommentResponse;
 import com.duong.springdemoresful.helper.ApiResponse;
+import com.duong.springdemoresful.helper.PageResponse;
 import com.duong.springdemoresful.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +24,9 @@ public class CommentController {
     }
 
     @GetMapping("/comments")
-    public ResponseEntity<ApiResponse<List<CommentResponse>>> getAllComments(){
-        return ApiResponse.success(service.getAllComments());
+    public ResponseEntity<ApiResponse<PageResponse<CommentResponse>>> getComments(Pageable pageable, CommentFilterRequest filterRequest){
+        Page<CommentResponse> pages = service.getAllComments(pageable,filterRequest);
+        return ApiResponse.success(PageResponse.from(pages));
     }
 
     @GetMapping("/comments/{id}")

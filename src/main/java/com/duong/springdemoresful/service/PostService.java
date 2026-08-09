@@ -1,5 +1,6 @@
 package com.duong.springdemoresful.service;
 
+import com.duong.springdemoresful.dto.request.PostFilterRequest;
 import com.duong.springdemoresful.dto.request.PostRequest;
 
 import com.duong.springdemoresful.dto.response.PostResponse;
@@ -8,8 +9,12 @@ import com.duong.springdemoresful.model.Post;
 import com.duong.springdemoresful.model.Tag;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.PostRepository;
+import com.duong.springdemoresful.service.specification.PostSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,8 +59,15 @@ public class PostService {
         return convertToDto(repository.save(convertDtoToPost(postRequest)));
     }
 
-    public List<PostResponse> getAllPost(){
-      return repository.findAll().stream().map(this::convertToDto).toList();
+    public Page<PostResponse> getAllPost(Pageable page, PostFilterRequest filterRequest){
+        Specification<Post> specification = Specification.allOf(
+                PostSpecification.hasTitle(filterRequest),
+                PostSpecification.hasTag(filterRequest),
+                PostSpecification.hasUser(filterRequest),
+                PostSpecification.updatedAtBetween(filterRequest),
+                PostSpecification.createdAtBetween(filterRequest)
+                );
+      return repository.findAll(specification,page).map(this::convertToDto);
     }
 
     public PostResponse getPostById(Long id){

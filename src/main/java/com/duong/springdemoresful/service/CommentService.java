@@ -1,5 +1,6 @@
 package com.duong.springdemoresful.service;
 
+import com.duong.springdemoresful.dto.request.CommentFilterRequest;
 import com.duong.springdemoresful.dto.request.CommentRequest;
 import com.duong.springdemoresful.dto.response.CommentResponse;
 import com.duong.springdemoresful.helper.exception.ResourceNotFoundException;
@@ -7,11 +8,13 @@ import com.duong.springdemoresful.model.Comment;
 import com.duong.springdemoresful.model.Post;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.CommentRepository;
+import com.duong.springdemoresful.service.specification.CommentSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +48,13 @@ public class CommentService {
                 .build();
     }
 
-    public List<CommentResponse> getAllComments(){
-        return repository.findAll().stream().map(this::toDto).toList();
+    public Page<CommentResponse> getAllComments(Pageable pageable, CommentFilterRequest filterRequest){
+        Specification<Comment> specification = Specification.allOf(
+                CommentSpecification.hasComment(filterRequest),
+                CommentSpecification.hasPost(filterRequest),
+                CommentSpecification.hasUser(filterRequest)
+        );
+        return repository.findAll(specification,pageable).map(this::toDto);
     }
 
     public CommentResponse getCommentById(Long id){

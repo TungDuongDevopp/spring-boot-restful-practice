@@ -1,0 +1,40 @@
+2026-08-09T18:27:41.846+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] c.d.s.SpringDemoResfulApplication        : Starting SpringDemoResfulApplication using Java 21.0.11 with PID 16124 (E:\spring-boot-resful-practice\target\classes started by xayda in E:\spring-boot-resful-practice)
+2026-08-09T18:27:41.846+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] c.d.s.SpringDemoResfulApplication        : The following 1 profile is active: "prod"
+2026-08-09T18:27:42.060+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-08-09T18:27:42.079+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 17 ms. Found 6 JPA repository interfaces.
+2026-08-09T18:27:42.213+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 3000 (http)
+2026-08-09T18:27:42.215+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-08-09T18:27:42.215+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.22]
+2026-08-09T18:27:42.239+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 391 ms
+2026-08-09T18:27:42.312+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] org.hibernate.orm.jpa                    : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-08-09T18:27:42.345+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-08-09T18:27:42.346+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Starting...
+2026-08-09T18:27:42.368+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-8 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4d635e01
+2026-08-09T18:27:42.369+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Start completed.
+2026-08-09T18:27:42.371+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:mysql://localhost:3306/springdemoresful]
+	Database driver: MySQL Connector/J
+	Database dialect: MySQLDialect
+	Database version: 8.0.46
+	Default catalog/schema: springdemoresful/undefined
+	Autocommit mode: undefined/unknown
+	Isolation level: REPEATABLE_READ [default REPEATABLE_READ]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-08-09T18:27:42.468+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] org.hibernate.orm.core                   : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-08-09T18:27:42.489+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-08-09T18:27:42.728+07:00  WARN 16124 --- [Learn-Resful-Api] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-08-09T18:27:42.790+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsService
+2026-08-09T18:27:43.140+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 3000 (http) with context path '/'
+2026-08-09T18:27:43.144+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] c.d.s.SpringDemoResfulApplication        : Started SpringDemoResfulApplication in 1.426 seconds (process running for 456.967)
+2026-08-09T18:27:43.145+07:00  WARN 16124 --- [Learn-Resful-Api] [restartedMain] o.s.core.events.SpringDocAppInitializer  : SpringDoc /v3/api-docs endpoint is enabled by default. To disable it in production, set the property 'springdoc.api-docs.enabled=false'
+2026-08-09T18:27:43.145+07:00  WARN 16124 --- [Learn-Resful-Api] [restartedMain] o.s.core.events.SpringDocAppInitializer  : SpringDoc /swagger-ui.html endpoint is enabled by default. To disable it in production, set the property 'springdoc.swagger-ui.enabled=false'
+2026-08-09T18:27:43.146+07:00  INFO 16124 --- [Learn-Resful-Api] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-08-09T18:28:14.363+07:00  INFO 16124 --- [Learn-Resful-Api] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-08-09T18:28:14.365+07:00  INFO 16124 --- [Learn-Resful-Api] [Thread-29] o.s.boot.tomcat.GracefulShutdown         : Commencing graceful shutdown. Waiting for active requests to complete
+2026-08-09T18:28:14.380+07:00  INFO 16124 --- [Learn-Resful-Api] [tomcat-shutdown] o.s.boot.tomcat.GracefulShutdown         : Graceful shutdown complete
+2026-08-09T18:28:14.382+07:00  INFO 16124 --- [Learn-Resful-Api] [Thread-29] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-08-09T18:28:14.383+07:00  INFO 16124 --- [Learn-Resful-Api] [Thread-29] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Shutdown initiated...
+2026-08-09T18:28:14.388+07:00  INFO 16124 --- [Learn-Resful-Api] [Thread-29] com.zaxxer.hikari.HikariDataSource       : HikariPool-8 - Shutdown completed.

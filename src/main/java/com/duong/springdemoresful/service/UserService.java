@@ -2,6 +2,7 @@
 package com.duong.springdemoresful.service;
 
 
+import com.duong.springdemoresful.dto.request.RegisterRequest;
 import com.duong.springdemoresful.dto.request.UserFilterRequest;
 import com.duong.springdemoresful.dto.request.UserRequestCreate;
 import com.duong.springdemoresful.dto.response.RoleResponse;
@@ -110,7 +111,26 @@ public class UserService {
 	public void deleteUserById(Long id) {
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+		if(user.getEmail().equals("user@example.com")|| user.getEmail().equals("admin@example.com")){
+			throw new ResourceNotFoundException("Can not delete this Account");
+		}
 		userRepository.deleteById(id);
+	}
+	public void registerUser(RegisterRequest request){
+		if(userRepository.existsByEmail(request.getEmail())){
+			throw new DuplicateResourceException("Email has exits");
+
+		}
+		Role userRole = roleRepository.findByIdOrName(null,"USER").orElseThrow(()-> new ResourceNotFoundException("Role not found"));
+		User user = new User();
+		String hashPassword = encoder.encode(request.getPassword());
+		user.setName(request.getName());
+		user.setEmail(request.getEmail());
+		user.setRole(userRole);
+		user.setAddress(request.getAddress());
+		user.setPassword(hashPassword);
+		userRepository.save(user);
 	}
 
 }

@@ -8,6 +8,7 @@ import com.nimbusds.jose.util.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -25,9 +26,13 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.util.Arrays;
 
 @Configuration
 @EnableMethodSecurity
@@ -68,13 +73,14 @@ public class SecurityConfig {
                 "/v3/api-docs/**",
                 "/swagger-ui/**",
                 "/swagger-ui.html",
-                 "/auth/login","/auth/refresh","/auth/refresh-with-cookie"
-        };
+                 "/auth/login","/auth/refresh","/auth/refresh-with-cookie",
+                 "/auth/register",
 
+        };
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(WHITELIST).permitAll()
-                        .requestMatchers("/users/**","/roles/**","/auth/account").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/posts/**","/comments").permitAll()
                         .anyRequest().authenticated()
                 );
         http.formLogin(AbstractHttpConfigurer::disable);
@@ -88,6 +94,7 @@ public class SecurityConfig {
                 .jwt(
                 jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
         ));
+        http.cors(cors-> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
@@ -114,6 +121,26 @@ public class SecurityConfig {
         converter.setJwtGrantedAuthoritiesConverter(scopeConverter);
         return converter;
     }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000",
+                "http://localhost:8080","https://yourdomain.com"));
+
+        configuration.setAllowedMethods(
+                Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+
+        configuration.setAllowedHeaders(
+                Arrays.asList("Authorization", "Content-Type", "Cache-Control"));
+
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 
 
 

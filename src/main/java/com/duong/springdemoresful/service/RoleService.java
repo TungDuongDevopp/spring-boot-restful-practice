@@ -6,17 +6,19 @@ import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.repository.RoleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
 public class RoleService {
     private final RoleRepository repository;
 
-    public List<Role> getAll(){
-        return repository.findAll();
+    public Page<Role> getAll(Pageable pageable){
+        return repository.findAll(pageable).map(role -> new Role(role.getId(),role.getName(),role.getDescription(),null));
     }
 
     public Role create(Role role){

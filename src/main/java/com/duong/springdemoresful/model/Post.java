@@ -47,13 +47,27 @@ public class Post {
 	inverseJoinColumns = @JoinColumn(name = "tag_id"))
 	private List<Tag> tags;
 
+	public Post(String title, String content, User user) {
+
+		this.title = title;
+		this.content = content;
+		this.user = user;
+	}
+
 	@PrePersist
 	public void preCreate(){
 		createdAt = Instant.now();
 		updatedAt = Instant.now();
-		User u = new User();
-		u.setId(SecurityUtil.getCurrentIdLogin());
-		user = u;
+	
+		boolean isLoggedIn = SecurityUtil.getCurrentUsernameLogin().isPresent();
+		if(isLoggedIn){
+			Long currentId = SecurityUtil.getCurrentIdLogin();
+			if(currentId != null && currentId > 0){
+				User u = new User();
+				u.setId(currentId);
+				user = u;
+			}
+		}
 	}
 
 }

@@ -38,8 +38,10 @@ public class CommentService {
     private CommentResponse toDto(Comment comment){
         CommentResponse.OutputUser user = new CommentResponse.OutputUser();
         user.setId(comment.getUser().getId());
+        user.setUserName(comment.getUser().getName());
         CommentResponse.OutputPost post = new CommentResponse.OutputPost();
         post.setId(comment.getPost().getId());
+        post.setPostName(comment.getPost().getTitle());
         return CommentResponse.builder()
                 .id(comment.getId())
                 .content(comment.getContent())

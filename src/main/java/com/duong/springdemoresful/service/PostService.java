@@ -52,6 +52,9 @@ public class PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .tags(tags)
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .authorName(post.getUser().getName())
                 .build();
     }
 

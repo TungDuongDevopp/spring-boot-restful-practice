@@ -8,6 +8,8 @@ import com.duong.springdemoresful.repository.PostRepository;
 import com.duong.springdemoresful.repository.TagRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class TagService {
     final TagRepository repository;
     final PostRepository postRepository;
 
-    public List<Tag> getAllTags(){
-        return  repository.findAll();
+    public Page<Tag> getAllTags(Pageable pageable){
+        return  repository.findAll(pageable).map(tag -> new Tag(tag.getId(),tag.getName(),null));
     }
 
     public Tag getTagById(Long id){

@@ -1,14 +1,16 @@
 package com.duong.springdemoresful.controller;
 
 import com.duong.springdemoresful.helper.ApiResponse;
+import com.duong.springdemoresful.helper.PageResponse;
 import com.duong.springdemoresful.model.Tag;
 import com.duong.springdemoresful.service.TagService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,8 +24,9 @@ public class TagController {
 
     }
     @GetMapping("/tags")
-    public ResponseEntity<ApiResponse<List<Tag>>> getAllTags(){
-        return ApiResponse.success(service.getAllTags());
+    public ResponseEntity<ApiResponse<PageResponse<Tag>>> getAllTags(Pageable pageable){
+        Page<Tag> tags = service.getAllTags(pageable);
+        return ApiResponse.success(PageResponse.from(tags));
     }
 
     @GetMapping("/tags/{id}")

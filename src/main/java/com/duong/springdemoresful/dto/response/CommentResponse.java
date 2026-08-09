@@ -22,11 +22,13 @@ public class CommentResponse {
     @NoArgsConstructor
     public static class OutputUser{
         private Long id;
+        private String userName;
     }
 
     @Getter @Setter
     @NoArgsConstructor
     public static class OutputPost{
         private Long id;
+        private String postName;
     }
 }

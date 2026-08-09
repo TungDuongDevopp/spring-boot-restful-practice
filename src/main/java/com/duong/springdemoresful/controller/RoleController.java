@@ -1,10 +1,13 @@
 package com.duong.springdemoresful.controller;
 
 import com.duong.springdemoresful.helper.ApiResponse;
+import com.duong.springdemoresful.helper.PageResponse;
 import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.service.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +25,11 @@ public class RoleController {
     }
 
     @GetMapping("/roles")
-    public ResponseEntity<ApiResponse<List<Role>>> getAllRoles(){
-        return  ApiResponse.success(service.getAll());
+    public ResponseEntity<ApiResponse<PageResponse<Role>>> getAllRoles(Pageable pageable){
+        Page<Role> roles = service.getAll(pageable);
+        return  ApiResponse.success(PageResponse.from(roles));
     }
+
     @GetMapping("/roles/{id}")
     public ResponseEntity<ApiResponse<Role>> getRoleById(@PathVariable Long id){
         return  ApiResponse.success(service.getById(id));

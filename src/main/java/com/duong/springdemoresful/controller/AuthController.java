@@ -2,6 +2,7 @@
 package com.duong.springdemoresful.controller;
 import com.duong.springdemoresful.config.JwtService;
 import com.duong.springdemoresful.dto.request.LoginRequest;
+import com.duong.springdemoresful.dto.request.RegisterRequest;
 import com.duong.springdemoresful.dto.response.ExchangeTokenResponse;
 import com.duong.springdemoresful.dto.response.LoginResponse;
 import com.duong.springdemoresful.helper.ApiResponse;
@@ -80,6 +81,7 @@ public class AuthController {
         return ApiResponse.success(jwtService.handleExchangeToken(refreshToken));
 
     }
+
     @PostMapping("/refresh-with-cookie")
     public ResponseEntity<ApiResponse<ExchangeTokenResponse>> refreshWithCookie(
             @CookieValue(value = "refresh_token") String refreshToken) {
@@ -100,6 +102,7 @@ public class AuthController {
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(finalData);
     }
+
     @GetMapping("/account")
     public ResponseEntity<ApiResponse<LoginResponse.UserLogin>> getAccount(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -113,6 +116,7 @@ public class AuthController {
         userLogin.setUsername(username);
         return  ApiResponse.success(userLogin);
     }
+
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<String>>logout(@AuthenticationPrincipal Jwt jwt,
                          @CookieValue(value = "refresh_token",required = false) String refreshToken){
@@ -129,6 +133,13 @@ public class AuthController {
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,deleteCokie.toString())
                 .body(finalData);
+
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<String>> register(@Valid @RequestBody RegisterRequest request){
+        userService.registerUser(request);
+        return ApiResponse.success("ok");
 
     }
 }

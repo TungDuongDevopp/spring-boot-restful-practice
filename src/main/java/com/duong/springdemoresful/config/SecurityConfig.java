@@ -81,6 +81,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(WHITELIST).permitAll()
                         .requestMatchers(HttpMethod.GET,"/posts/**","/comments").permitAll()
+                        .requestMatchers("/users/**","/posts/**","/comments/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );
         http.formLogin(AbstractHttpConfigurer::disable);

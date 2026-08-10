@@ -1,4 +1,4 @@
-package vn.hoidanit.springsieutoc;
+package com.duong.springdemoresful;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

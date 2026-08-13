@@ -10,6 +10,7 @@ import com.duong.springdemoresful.dto.request.UserRequestUpdate;
 import com.duong.springdemoresful.dto.response.UserResponse;
 import com.duong.springdemoresful.helper.exception.DuplicateResourceException;
 import com.duong.springdemoresful.helper.exception.ResourceNotFoundException;
+import com.duong.springdemoresful.mapper.UserMapper;
 import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.model.User;
 import com.duong.springdemoresful.repository.RoleRepository;
@@ -23,6 +24,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 
@@ -31,22 +34,17 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder encoder;
 	private final RoleRepository roleRepository;
+	private final UserMapper userMapper;
 
 	public Page<UserResponse> fetchUsers(Pageable pageable, UserFilterRequest filterRequest) {
 		Specification<User> specification = Specification.allOf(
 				UserSpecification.hasName(filterRequest),
 				UserSpecification.hasRole(filterRequest)
-
-
 		);
 
-		return this.userRepository.findAll(specification,pageable)
-				.map(user-> UserResponse.builder()
-						.id(user.getId())
-						.name(user.getName())
-						.email(user.getEmail())
-						.role(new RoleResponse(user.getRole().getId(),user.getRole().getName()))
-						.build());
+		return userRepository.findAll(specification, pageable)
+				.map(userMapper::toResponse);
+
 
 	}
 
@@ -62,18 +60,14 @@ public class UserService {
 				.orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 
 		String hashPassword = encoder.encode(userDto.getPassword());
-
-		User userEntity = new User();
-		userEntity.setName(userDto.getName());
-		userEntity.setEmail(userDto.getEmail());
+		User userEntity = userMapper.toEntityCreate(userDto);
 		userEntity.setPassword(hashPassword);
 		userEntity.setRole(existsRole);
-
-		return convert(userRepository.save(userEntity));
+		return  userMapper.toResponse(userRepository.save(userEntity));
 	}
 
 	public UserResponse findUserById(Long id) {
-		return convert(this.userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found")));
+		return userMapper.toResponse(this.userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("User not found")));
 	}
 
 
@@ -88,22 +82,11 @@ public class UserService {
 		}
 		currentUser.setName(inputUser.getName());
 		currentUser.setAddress(inputUser.getAddress());
-		return convert(currentUser);
+		return userMapper.toResponse(currentUser);
 
 
 	}
 
-	public UserResponse convert(User user){
-
-		return UserResponse.builder()
-				.id(user.getId())
-				.name(user.getName())
-				.email(user.getEmail())
-				.address(user.getAddress())
-				.role(new RoleResponse(user.getRole().getId(),user.getRole().getName()))
-				.build();
-
-	}
 	public User getUserByEmail(String email){
 		return userRepository.findByEmail(email).orElseThrow(()-> new ResourceNotFoundException("Customer not found"));
 	}
@@ -123,12 +106,8 @@ public class UserService {
 
 		}
 		Role userRole = roleRepository.findByIdOrName(null,"USER").orElseThrow(()-> new ResourceNotFoundException("Role not found"));
-		User user = new User();
+		User user = userMapper.toEntityRegister(request);
 		String hashPassword = encoder.encode(request.getPassword());
-		user.setName(request.getName());
-		user.setEmail(request.getEmail());
-		user.setRole(userRole);
-		user.setAddress(request.getAddress());
 		user.setPassword(hashPassword);
 		userRepository.save(user);
 	}

@@ -3,6 +3,8 @@ package com.duong.springdemoresful.service;
 import com.duong.springdemoresful.dto.request.UserRequestCreate;
 import com.duong.springdemoresful.dto.response.RoleResponse;
 import com.duong.springdemoresful.dto.response.UserResponse;
+import com.duong.springdemoresful.helper.exception.DuplicateResourceException;
+import com.duong.springdemoresful.helper.exception.ResourceNotFoundException;
 import com.duong.springdemoresful.mapper.UserMapper;
 import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.model.User;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -65,6 +68,34 @@ public class UserServiceTest {
         UserResponse userResponse = userService.createUser(inputUserDto);
 
         assertEquals(outputUserDto,userResponse);
+
+    }
+    @Test
+    public void createUser_shouldThrowException_whenEmailDuplicate() {
+        Role role = new Role(1L,"ADMIN","Quyền ADMIN",null);
+        UserRequestCreate inputUserDto = new UserRequestCreate(null,"Duong","admin@gmail.com","123456","HaNoi",role);;
+        when(userRepository.existsByEmail(inputUserDto.getEmail())).thenReturn(true);
+
+        Exception ex = assertThrows(DuplicateResourceException.class,()->{
+            userService.createUser(inputUserDto);
+        });
+         assertEquals("Email already exists",ex.getMessage());
+
+    }
+    @Test
+    public void createUser_shouldThrowException_whenRoleInvalid() {
+        Role role = new Role(1L,"ADMIN","Quyền ADMIN",null);
+        Long roleId = role.getId();
+        String roleName = role.getName();
+        UserRequestCreate inputUserDto = new UserRequestCreate(null,"Duong","admin@gmail.com","123456","HaNoi",role);
+
+        when(userRepository.existsByEmail(inputUserDto.getEmail())).thenReturn(false);
+        when(roleRepository.findByIdOrName(roleId,roleName)).thenReturn(Optional.empty());
+
+        Exception ex = assertThrows(ResourceNotFoundException.class,()->{
+            userService.createUser(inputUserDto);
+        });
+        assertEquals("Role not found",ex.getMessage());
 
     }
 

@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>com.tungduong</groupId>
-	<artifactId>spring-demo-resful</artifactId>
+	<artifactId>spring-demo-restful</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-demo-resful</name>
 	<description>spring-demo-resful</description>

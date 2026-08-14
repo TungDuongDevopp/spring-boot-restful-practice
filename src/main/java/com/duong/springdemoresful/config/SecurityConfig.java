@@ -77,13 +77,14 @@ public class SecurityConfig {
                  "/auth/register",
 
         };
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(WHITELIST).permitAll()
-                        .requestMatchers(HttpMethod.GET,"/posts/**","/comments").permitAll()
-                        .requestMatchers("/users/**","/posts/**","/comments/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-                );
+//        http
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers(WHITELIST).permitAll()
+//                        .requestMatchers(HttpMethod.GET,"/posts/**","/comments").permitAll()
+//                        .requestMatchers("/users/**","/posts/**","/comments/**").hasRole("ADMIN")
+//                        .anyRequest().authenticated()
+//                );
+        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.anyRequest().permitAll());
         http.formLogin(AbstractHttpConfigurer::disable);
         http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(session ->

@@ -1,5 +1,6 @@
 package com.duong.springdemoresful.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -28,5 +29,6 @@ public class Role {
 	private String description;
 
 	@OneToMany(mappedBy = "role")
-    private List<User> users;
+	@JsonIgnore
+	private List<User> users;
 }

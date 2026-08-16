@@ -1,17 +1,15 @@
 package com.duong.springdemoresful.controller;
 
+import com.duong.springdemoresful.IntegrationTest;
 import com.duong.springdemoresful.dto.request.UserRequestCreate;
 import com.duong.springdemoresful.model.Role;
 import com.duong.springdemoresful.repository.RoleRepository;
-import com.duong.springdemoresful.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@ActiveProfiles("test")
+@IntegrationTest
 @AutoConfigureMockMvc
 @Transactional
 public class UserControllerIT {

@@ -1,5 +1,7 @@
 package com.duong.springdemoresful.service;
 
+import com.duong.springdemoresful.helper.exception.InvalidTypeFileException;
+import com.duong.springdemoresful.helper.exception.StorageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,9 +15,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class FileService {
+    private static final List<String> allowedExtensions = Arrays.asList("pdf", "jpg", "jpeg", "png", "doc", "docx");
+    private static final List<String> allowedMimeTypes = Arrays.asList(
+            "application/pdf",
+            "image/jpeg",
+            "image/png",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    );
+
 
     @Value("${duong.upload-file.base-uri}")
     private String baseURI;
@@ -37,6 +50,26 @@ public class FileService {
         }
     }
     public String store(MultipartFile file, String folder) throws URISyntaxException, IOException {
+
+        String fileName = file.getOriginalFilename();
+        String contentType = file.getContentType();
+
+        if(file.isEmpty()) {
+          throw new StorageException("File is empty, Please upload again!");
+      }
+        boolean isValidExtension = allowedExtensions.stream().anyMatch(ext -> {
+            assert fileName != null;
+            return fileName.toLowerCase().endsWith(".%s".formatted(ext));
+        });
+
+        if(!isValidExtension) {
+            throw new InvalidTypeFileException("Invalid file extension, please upload again!");
+        }
+
+        if (!allowedMimeTypes.contains(contentType)) {
+            throw new InvalidTypeFileException("Invalid file type, please upload again!");
+        }
+
         // create unique filename
         String finalName = "%d-%s".formatted(System.currentTimeMillis(), file.getOriginalFilename());
 

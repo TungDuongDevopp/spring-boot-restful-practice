@@ -2,6 +2,7 @@ package com.duong.springdemoresful.helper;
 
 
 import com.duong.springdemoresful.helper.exception.DuplicateResourceException;
+import com.duong.springdemoresful.helper.exception.StorageException;
 import com.duong.springdemoresful.helper.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +34,15 @@ public class GlobalExceptionHandle {
     public ResponseEntity<?> handleMisMatched(MethodArgumentTypeMismatchException ex){
         return  ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
+
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<?> handleUploadFile(StorageException ex){
+        return  ApiResponse.error(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Object>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<String> errorList = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .map(error -> "%s: %s".formatted(error.getField(), error.getDefaultMessage()))
                 .collect(Collectors.toList());
         String errors = String.join("; ", errorList);
 
